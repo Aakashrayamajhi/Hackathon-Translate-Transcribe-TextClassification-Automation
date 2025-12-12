@@ -2,6 +2,8 @@
 
 This repository contains an n8n workflow that classifies complaints into multiple categories and returns a structured JSON response for each complaint.
 
+<img src="workflow.png" alt="Complaint Classification Workflow" width="600"/>
+
 ## Workflow Overview
 
 The workflow performs the following steps:
@@ -36,3 +38,4 @@ The workflow performs the following steps:
   "text": "There is a power outage since morning",
   "complaintId": "12345"
 }
+
