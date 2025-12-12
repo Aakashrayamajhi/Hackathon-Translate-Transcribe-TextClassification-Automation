@@ -1,0 +1,1091 @@
+{
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "2e96294e-763b-4e0a-90fb-b7d024c26f68",
+                "responseMode": "responseNode",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2.1,
+            "position": [
+                -1328,
+                128
+            ],
+            "id": "80d08cd8-cc3a-48f0-8de9-bd9217332a70",
+            "name": "Webhook",
+            "webhookId": "2e96294e-763b-4e0a-90fb-b7d024c26f68"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "=Translate the following text into English exactly. \nDo not add anything else extra. Only return the translated text.   and output must be in a json structured . also whenever you got double meaningfull complaints try yourslef to find it out what it means - only in special case.\n\nalso do not give output in this formate :{\\n  \\\"translatedText\\\": \\ just give output in json formate only without any such thing\n you will also get complaintId also . mention complaintid in output\nline inromonized means electricity\n\nInput:\n{{ $json.body.text }}\ncomplaintId: {{ $json.body.complaintId }}\n",
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "typeVersion": 2.2,
+            "position": [
+                -1040,
+                336
+            ],
+            "id": "33a6bde0-b10d-4662-972e-bd7fc5bcf309",
+            "name": "AI Agent"
+        },
+        {
+            "parameters": {
+                "model": {
+                    "__rl": true,
+                    "value": "gpt-4o-mini",
+                    "mode": "list",
+                    "cachedResultName": "gpt-4o-mini"
+                },
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "typeVersion": 1.2,
+            "position": [
+                -1184,
+                544
+            ],
+            "id": "a9405cf4-ec2b-433e-85ff-12e97c55f692",
+            "name": "OpenAI Chat Model"
+        },
+        {
+            "parameters": {
+                "inputText": "={{ $json.output }}",
+                "categories": {
+                    "categories": [
+                        {
+                            "category": "electricity",
+                            "description": "Electricity-related complaint indicators  Classify a complaint as electricity-related if it mentions:  Power Outages / Load Shedding  Complaints about frequent or prolonged electricity cuts.  Example: “power outage since morning”, “frequent load shedding”, “electricity not available for hours”.  Voltage / Electrical Fluctuations  Complaints about low/high voltage, power surges, or unstable electricity.  Example: “voltage fluctuating”, “power surge damaged appliances”, “low voltage issue”.  Electricity Billing / Meter Issues  Complaints about high bills, incorrect billing, or faulty meters.  Example: “overcharged electricity bill”, “meter not working”, “incorrect billing”.  Faulty Infrastructure / Line Issues  Complaints about broken poles, fallen wires, or damaged transformers.  Example: “fallen electric pole”, “wire hanging on road”, “transformer not working”.  Safety Hazards / Accidents  Complaints about electrocution, short circuits, or exposed wires causing danger.  Example: “short circuit caused fire”, “exposed wires near house”, “electric shock hazard”.  Electricity Connection / Service Issues  Complaints about new connections, disconnections, or poor service.  Example: “new connection delayed”, “electricity disconnected without notice”, “service not available”.  Streetlight / Public Lighting Problems  Complaints about non-functional streetlights or public area lighting.  Example: “streetlights not working”, “roads dark at night”, “lamp posts broken”.  Keywords for classification  Useful keywords for automated classification:  [\"electricity\", \"power outage\", \"load shedding\", \"voltage fluctuation\", \"high voltage\", \"low voltage\", \"meter\", \"billing\", \"overcharged\", \"short circuit\", \"fallen wire\", \"transformer\", \"electrocution\", \"safety hazard\", \"connection\", \"disconnection\", \"streetlight\", \"public lighting\", \"electric pole\", \"power failure\"]"
+                        },
+                        {
+                            "category": "road",
+                            "description": "Road-related complaint indicators  Classify a complaint as road-related if it mentions:  Road Condition / Maintenance Issues  Complaints about potholes, cracks, broken roads, or damaged surfaces.  Example: “potholes on main road”, “road broken after rain”, “uneven surface causing accidents”.  Traffic / Congestion Problems  Complaints about heavy traffic, jams, or blocked roads.  Example: “traffic jam on highway”, “road blocked by vehicles”, “congestion during peak hours”.  Accidents / Safety Hazards  Complaints about road accidents, unsafe conditions, or lack of safety measures.  Example: “accident due to bad road”, “no streetlights causing accidents”, “dangerous road bends”.  Road Blockage / Encroachments  Complaints about illegally parked vehicles, construction material, or debris blocking roads.  Example: “road blocked by construction debris”, “illegal parking causing problem”, “vendors blocking road”.  Signage / Traffic Signals Issues  Complaints about missing or broken road signs, traffic lights, or signals.  Example: “traffic signal not working”, “no road signs in area”, “broken pedestrian crossing signs”.  Flooding / Drainage on Roads  Complaints about waterlogging, blocked drains, or flooded roads.  Example: “road flooded after rain”, “drains not draining properly”, “waterlogging making road unusable”.  Public Transport / Road Accessibility  Complaints about buses, taxis, or public transport struggling due to road conditions.  Example: “bus cannot pass due to potholes”, “roads inaccessible during rains”, “road unsafe for vehicles”.  Keywords for classification  Useful keywords for automated classification:  [\"road\", \"pothole\", \"broken road\", \"traffic\", \"congestion\", \"accident\", \"unsafe\", \"blocked road\", \"illegal parking\", \"road signs\", \"traffic signal\", \"streetlight\", \"flooding\", \"waterlogging\", \"drainage\", \"construction debris\", \"road maintenance\", \"public transport\", \"inaccessible road\", \"road hazard\"]"
+                        },
+                        {
+                            "category": "water",
+                            "description": "Water-related complaint indicators\n\nClassify a complaint as water-related if it mentions:\n\nWater Supply Issues\n\nComplaints about irregular, insufficient, or no water supply.\n\nExample: “no water in tap”, “water supply cut off”, “low water pressure”.\n\nWater Quality / Contamination\n\nComplaints about dirty, polluted, or unsafe water.\n\nExample: “water is dirty”, “contaminated drinking water”, “water has bad smell/taste”.\n\nPipeline / Leakage Issues\n\nComplaints about broken pipes, leaks, or burst water mains.\n\nExample: “leaking water pipe”, “water main broken”, “pipe burst flooding street”.\n\nDrainage / Sewer Problems\n\nComplaints about blocked drains, overflowing sewage, or waterlogging.\n\nExample: “sewage blocked in street”, “waterlogging after rain”, “drains not cleaned”.\n\nBilling / Meter Issues\n\nComplaints about incorrect bills, overcharging, or meter faults.\n\nExample: “water bill too high”, “meter not working”, “overcharged for water”.\n\nWater Access / Infrastructure Issues\n\nComplaints about lack of taps, wells, water tanks, or broken infrastructure.\n\nExample: “no tap in area”, “broken water tank”, “community water point not working”.\n\nEmergency / Natural Disasters Affecting Water\n\nComplaints about floods, droughts, or disaster affecting water availability.\n\nExample: “flooded streets cut water supply”, “drought caused water shortage”.\n\nKeywords for classification\n\nUseful keywords for automated classification:\n\n[\"water\", \"tap\", \"pipeline\", \"leak\", \"burst pipe\", \"water supply\", \"low pressure\", \"dirty water\", \"contaminated water\", \"sewage\", \"drainage\", \"overflow\", \"waterlogging\", \"water bill\", \"meter\", \"access\", \"infrastructure\", \"well\", \"tank\", \"shortage\", \"flood\", \"drought\"]"
+                        },
+                        {
+                            "category": "transportation",
+                            "description": "\"Any complaint rTransportation-related complaint indicators  Classify a complaint as transportation-related if it mentions:  Public Transport Issues  Complaints about buses, taxis, trains, or other public vehicles.  Example: “bus late”, “train delayed”, “overcrowded bus”, “no taxi available”.  Traffic / Road Problems  Complaints about traffic jams, roadblocks, potholes, or poor road conditions.  Example: “traffic jam on main road”, “potholes causing accidents”, “roads in bad condition”.  Accidents / Safety Concerns  Complaints about vehicle accidents, unsafe driving, or dangerous road conditions.  Example: “bus accident today”, “reckless driver caused crash”, “no road safety measures”.  Vehicle Condition / Maintenance  Complaints about broken, unclean, or poorly maintained vehicles.  Example: “bus in bad condition”, “broken seats in taxi”, “train toilets dirty”.  Fare / Ticketing Issues  Complaints about overcharging, ticket unavailability, or unfair pricing.  Example: “overcharged for taxi”, “ticket booth closed”, “wrong fare collected”.  Parking / Infrastructure Issues  Complaints about lack of parking, illegal parking, or poor transportation infrastructure.  Example: “no parking space in station”, “illegal parking blocking road”, “bus stop not maintained”.  Delays / Inefficiency  Complaints about delayed schedules, missed services, or irregular timings.  Example: “bus did not arrive on time”, “train delayed for hours”, “irregular service schedule”.  Keywords for classification  Useful keywords for automated classification:  [\"bus\", \"train\", \"taxi\", \"public transport\", \"traffic\", \"road\", \"pothole\", \"accident\", \"unsafe\", \"vehicle condition\", \"maintenance\", \"overcharge\", \"fare\", \"ticket\", \"parking\", \"bus stop\", \"schedule delay\", \"infrastructure\", \"reckless driving\", \"crowded\"]elated to agriculture such as lack of irrigation, fertilizer shortage, seed unavailability, crop disease, pest problems, damage due to weather, poor support for farmers, or issues with agricultural equipment and markets.\""
+                        },
+                        {
+                            "category": "police",
+                            "description": "Police-related complaint indicators  Classify a complaint as police-related if it mentions:  Lack of Police Support / Presence  Complaints about police not being available, not patrolling, or absent during incidents.  Example: “no police in the area”, “patrol not seen”, “police did not respond”.  Delayed Police Response  Police taking too long to respond to emergencies or complaints.  Example: “police arrived late”, “response delayed”, “help came after hours”.  Corruption / Bribery  Complaints about extortion, bribery, or misuse of power.  Example: “police demanded bribe”, “corruption in filing FIR”, “officer took money illegally”.  Misconduct / Harassment  Complaints about abuse of authority, threatening behavior, or harassment.  Example: “police harassed me”, “officer threatened”, “misbehavior by police”.  Negligence / Inefficiency  Complaints about carelessness, ignoring reports, or mishandling cases.  Example: “case ignored by police”, “complaint not registered”, “negligence in investigation”.  Security Concerns / Safety Issues  Complaints about unsafe areas, lack of security measures, or fear due to crime.  Example: “area unsafe at night”, “no police to protect”, “residents feel insecure”.  FIR / Complaint Registration Issues  Complaints about refusal or delay in registering cases.  Example: “FIR not registered”, “police refused complaint”, “case registration delayed”.  Keywords for classification  Useful keywords for automated classification:  [\"police\", \"FIR\", \"complaint registration\", \"negligence\", \"corruption\", \"bribe\", \"harassment\", \"misconduct\", \"abuse of power\", \"threat\", \"delay\", \"no response\", \"patrolling\", \"security issue\", \"unsafe\", \"officer misconduct\", \"police absent\"]"
+                        },
+                        {
+                            "category": "fire",
+                            "description": "Fire-related complaint indicators  Classify a complaint as fire-related if it mentions:  Building / House Fires  Complaints about houses, apartments, shops, or offices catching fire.  Example phrases: “house caught fire”, “apartment burning”, “shop on fire”.  Forest / Wildfires / Grassfires  Complaints about fires in forests, hills, farmland, or grasslands.  Example: “forest fire spreading”, “grassland burning”, “wildfire near village”.  Industrial / Factory Fires  Fires in factories, warehouses, or industrial zones.  Example: “factory caught fire”, “chemical plant burning”, “warehouse fire incident”.  Electrical / Short-Circuit Fires  Fires caused by electrical faults or appliances.  Example: “short circuit caused fire”, “electric wire fire”, “appliance caught fire”.  Vehicle Fires  Cars, motorcycles, or public transport vehicles catching fire.  Example: “bus caught fire on highway”, “car fire accident”, “motorbike burning”.  Fire Safety / Prevention Issues  Complaints about lack of fire safety measures, fire extinguishers, or fire hydrants.  Example: “no fire extinguisher in building”, “fire safety measures missing”, “blocked fire exit”.  Fire Response Delays  Complaints about delayed response from fire brigade or authorities.  Example: “fire brigade arrived late”, “no water supply to stop fire”, “fire response delayed”.  Keywords for classification  Useful keywords for automated text classification:  [\"fire\", \"burning\", \"smoke\", \"flames\", \"blaze\", \"forest fire\", \"wildfire\", \"house fire\", \"shop fire\", \"factory fire\", \"short circuit fire\", \"electric fire\", \"vehicle fire\", \"fire extinguisher\", \"fire safety\", \"fire brigade\", \"fire hydrant\", \"emergency response\"]"
+                        },
+                        {
+                            "category": "cyber",
+                            "description": "Cyber-related complaint indicators  You can classify a complaint as cyber-related if it mentions issues like:  Online Fraud / Scams  Phishing, fake websites, online banking fraud, money transfer scams.  “Received a scam email”, “fake online transaction”, “lost money online”.  Hacking / Unauthorized Access  Account hacking, unauthorized access to emails, social media, or systems.  “My Facebook account was hacked”, “someone accessed my email”.  Identity Theft / Data Theft  Personal info stolen or misused online.  “My personal information was leaked”, “identity stolen online”.  Cyberbullying / Harassment  Threats, stalking, harassment, or abusive messages online.  “Someone is sending me threatening messages”, “cyber harassment on social media”.  Malware / Virus / Ransomware  Devices infected by malicious software.  “Laptop infected by virus”, “ransomware encrypted files”.  Phishing / Social Engineering  Deceptive messages, calls, or links tricking users.  “Received phishing SMS”, “fake call from bank asking credentials”.  Online Scams Targeting Services  Fake e-commerce orders, fake job postings, lottery scams.  “Fake online shopping website”, “scam job offer”.  Data Privacy / Breach Complaints  Websites or apps misusing data.  “App shared my data without consent”, “data breach notification”.  Keywords for classification  You can use text-based cues like:  [\"hack\", \"phishing\", \"cyber\", \"online fraud\", \"identity theft\", \"malware\", \"ransomware\", \"threat\", \"abuse\", \"harassment\", \"data leak\", \"social engineering\", \"scam\", \"virus\", \"account compromise\"]"
+                        },
+                        {
+                            "category": "waste",
+                            "description": "Waste-related complaint indicators  Classify a complaint as waste-related if it mentions:  Garbage / Trash Accumulation  Piles of garbage, overflowing bins, or uncollected waste.  Example: “garbage not collected”, “trash piling up”, “overflowing dustbin”.  Improper Disposal / Dumping  Illegal dumping of waste in streets, rivers, or vacant land.  Example: “waste dumped in river”, “illegal garbage dumping”, “construction debris on street”.  Odor / Pollution  Complaints about foul smell or pollution caused by waste.  Example: “bad smell from garbage”, “polluted area due to trash”, “waste causing stench”.  Pest / Rodent Infestation  Complaints about rats, flies, mosquitoes due to uncollected waste.  Example: “rats coming from trash”, “mosquito breeding in garbage”, “flies all over the area”.  Waste Management / Collection Issues  Delays or inefficiency in municipal waste collection services.  Example: “garbage truck not coming”, “waste collection delayed”, “irregular trash pickup”.  Recycling / Segregation Problems  Complaints about lack of recycling or waste segregation.  Example: “no separate bins for recyclables”, “plastic not collected properly”, “waste segregation ignored”.  Hazardous / Industrial Waste  Complaints about unsafe disposal of chemical, medical, or industrial waste.  Example: “chemical waste dumped in street”, “medical waste not handled safely”, “hazardous waste left exposed”.  Keywords for classification  Useful keywords for automated classification:  [\"garbage\", \"trash\", \"waste\", \"rubbish\", \"overflowing bin\", \"illegal dumping\", \"odor\", \"smell\", \"pollution\", \"rats\", \"flies\", \"mosquito\", \"collection delay\", \"trash pickup\", \"segregation\", \"recycling\", \"hazardous waste\", \"industrial waste\", \"chemical waste\", \"medical waste\"]"
+                        },
+                        {
+                            "category": "hospital",
+                            "description": "Hospital-related complaint indicators  Classify a complaint as hospital-related if it mentions:  Medical Negligence / Malpractice  Mistakes by doctors, nurses, or hospital staff.  Example: “wrong treatment given”, “doctor ignored patient”, “medical negligence”.  Poor Staff Behavior / Misconduct  Rude or unhelpful staff, harassment, or unethical behavior.  Example: “nurse was rude”, “staff did not help patient”, “harassment by hospital staff”.  Lack of Medical Facilities / Equipment  Missing beds, ventilators, oxygen, medicines, or diagnostic tools.  Example: “no oxygen available”, “no ICU bed”, “missing equipment for surgery”.  Delayed Treatment / Response  Complaints about long waiting times or delayed care.  Example: “treatment delayed”, “long waiting time in ER”, “doctor arrived late”.  Overcharging / Billing Issues  Excessive bills, hidden charges, or unfair payments.  Example: “overcharged for medicines”, “extra bill not explained”, “billing fraud”.  Infection / Hygiene Issues  Complaints about hospital cleanliness, infections, or unsafe conditions.  Example: “ward unhygienic”, “patients got infection in hospital”, “dirty toilets”.  Emergency / Ambulance Complaints  Issues with ambulance availability, emergency response, or transport.  Example: “ambulance arrived late”, “no ambulance in critical case”, “emergency care not provided”.  Patient Rights Violations  Lack of consent, privacy breaches, or refusal to provide care.  Example: “no consent taken before surgery”, “privacy not maintained”, “refused treatment”.  Keywords for classification  Useful keywords for automated classification:  [\"hospital\", \"doctor\", \"nurse\", \"medical\", \"treatment\", \"negligence\", \"misconduct\", \"hygiene\", \"cleanliness\", \"ambulance\", \"emergency\", \"ICU\", \"ventilator\", \"medicine\", \"overcharge\", \"billing\", \"infection\", \"patient rights\", \"surgery delay\", \"ER\", \"care refused\"]"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.textClassifier",
+            "typeVersion": 1.1,
+            "position": [
+                -640,
+                272
+            ],
+            "id": "e30fc7df-937d-4265-b46c-b0071455a842",
+            "name": "Text Classifier"
+        },
+        {
+            "parameters": {
+                "model": {
+                    "__rl": true,
+                    "value": "gpt-4o-mini",
+                    "mode": "list",
+                    "cachedResultName": "gpt-4o-mini"
+                },
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "typeVersion": 1.2,
+            "position": [
+                -640,
+                672
+            ],
+            "id": "3e1e9791-e344-4217-a080-4054fac609b1",
+            "name": "OpenAI Chat Model1"
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.4,
+            "position": [
+                -896,
+                752
+            ],
+            "id": "dce97300-60dd-4899-88cb-b9e025d3c5d7",
+            "name": "Respond to Webhook"
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.4,
+            "position": [
+                -768,
+                1136
+            ],
+            "id": "d204fa89-97a5-4b80-bd07-28d155bdf81a",
+            "name": "Respond to Webhook1"
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.4,
+            "position": [
+                -736,
+                1504
+            ],
+            "id": "5e30512d-176d-4987-b407-1a21d360c1c0",
+            "name": "Respond to Webhook2"
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.4,
+            "position": [
+                64,
+                752
+            ],
+            "id": "53f62d41-cd1f-46c0-a9aa-fe676c06a990",
+            "name": "Respond to Webhook3"
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.4,
+            "position": [
+                80,
+                1168
+            ],
+            "id": "e5073989-0a4c-4a8f-b396-bd0ab80c0700",
+            "name": "Respond to Webhook4"
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.4,
+            "position": [
+                96,
+                1488
+            ],
+            "id": "c34975fd-cf09-4992-89c9-7fe95e8a373d",
+            "name": "Respond to Webhook5"
+        },
+        {
+            "parameters": {
+                "model": {
+                    "__rl": true,
+                    "value": "gpt-4o-mini",
+                    "mode": "list",
+                    "cachedResultName": "gpt-4o-mini"
+                },
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "typeVersion": 1.2,
+            "position": [
+                -1312,
+                976
+            ],
+            "id": "0908f8fe-2416-41a1-af1e-3762525a0475",
+            "name": "OpenAI Chat Model2"
+        },
+        {
+            "parameters": {
+                "jsonSchemaExample": "{\n  \"complaintId\":\"\",\n  \"authorityType\": \"\",\n  \"message\": \"\"\n}\n"
+            },
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "typeVersion": 1.3,
+            "position": [
+                -1168,
+                976
+            ],
+            "id": "49ece4c1-6c0d-44d5-927f-9fe092cb64c4",
+            "name": "Structured Output Parser1"
+        },
+        {
+            "parameters": {
+                "model": {
+                    "__rl": true,
+                    "value": "gpt-4o-mini",
+                    "mode": "list",
+                    "cachedResultName": "gpt-4o-mini"
+                },
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "typeVersion": 1.2,
+            "position": [
+                -1312,
+                1344
+            ],
+            "id": "f77382e9-ac82-4d6b-8047-5b28f25d8e28",
+            "name": "OpenAI Chat Model3"
+        },
+        {
+            "parameters": {
+                "model": {
+                    "__rl": true,
+                    "value": "gpt-4o-mini",
+                    "mode": "list",
+                    "cachedResultName": "gpt-4o-mini"
+                },
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "typeVersion": 1.2,
+            "position": [
+                -1312,
+                1712
+            ],
+            "id": "45f4a15a-243b-4f40-baf8-431e94de0466",
+            "name": "OpenAI Chat Model4"
+        },
+        {
+            "parameters": {
+                "model": {
+                    "__rl": true,
+                    "value": "gpt-4o-mini",
+                    "mode": "list",
+                    "cachedResultName": "gpt-4o-mini"
+                },
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "typeVersion": 1.2,
+            "position": [
+                -400,
+                976
+            ],
+            "id": "ba8a066b-2289-41ba-8fbe-235de9941b60",
+            "name": "OpenAI Chat Model5"
+        },
+        {
+            "parameters": {
+                "model": {
+                    "__rl": true,
+                    "value": "gpt-4o-mini",
+                    "mode": "list",
+                    "cachedResultName": "gpt-4o-mini"
+                },
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "typeVersion": 1.2,
+            "position": [
+                -400,
+                1344
+            ],
+            "id": "ac4a0cfe-3611-462d-8073-ad6e383d197e",
+            "name": "OpenAI Chat Model6"
+        },
+        {
+            "parameters": {
+                "model": {
+                    "__rl": true,
+                    "value": "gpt-4o-mini",
+                    "mode": "list",
+                    "cachedResultName": "gpt-4o-mini"
+                },
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "typeVersion": 1.2,
+            "position": [
+                -400,
+                1712
+            ],
+            "id": "fec4cbff-c48c-42d7-9dbd-2ab4a9705d58",
+            "name": "OpenAI Chat Model7"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "=i want in in this formate \nexample formate : \n{\n  \"complaintId\":\"\",\n  \"authorityType\": \"ElECTRICITY\",\n  \"message\": \"\"\n}\n\n \nalso this is an electricity authority so you also have to add \"authority\":\"electricity\" along with output in json and do not add any extra things\ninput to formate : {{ $json.output }}",
+                "hasOutputParser": true,
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "typeVersion": 2.2,
+            "position": [
+                -1312,
+                752
+            ],
+            "id": "40eefbb6-67fb-42ac-801e-d5166fc31345",
+            "name": "electricity agent"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "=i want in in this formate \nexample formate : {\n  \"authority\": \"California\",\n  \"complaint\": \"message\"\n}\n\n \nalso this is an road authority so you also have to add \"authority\":\"road\" along with output in json and do not add any extra things\ninput to formate : {{ $json.output }}",
+                "hasOutputParser": true,
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "typeVersion": 2.2,
+            "position": [
+                -1312,
+                1136
+            ],
+            "id": "324f77c1-02da-4e1c-b6b8-5d42b516d45c",
+            "name": "road agent"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "=i want in in this formate \nexample formate : {\n  \"authority\": \"\",\n  \"complaint\": \"\"\n}\n\n \nalso this is an water authority so you also have to add \"authority\":\"water\" along with output in json and do not add any extra things\n\ninput to formate :  {{ $('AI Agent').item.json.output }}",
+                "hasOutputParser": true,
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "typeVersion": 2.2,
+            "position": [
+                -1312,
+                1504
+            ],
+            "id": "857fafe2-3488-4e94-9a37-a77d5a5f6da5",
+            "name": "water agent"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "=i want in in this formate \nexample formate : {\n  \"authority\": \"California\",\n  \"complaint\": \"message\"\n}\n\n \nalso this is an police authority so you also have to add \"authority\":\"police\" along with output in json  and do not add any extra things\n\ninput to formate :  {{ $json.output }}",
+                "hasOutputParser": true,
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "typeVersion": 2.2,
+            "position": [
+                -400,
+                1168
+            ],
+            "id": "654241b3-a650-469d-8ad9-473bf4e222a0",
+            "name": "police agent"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "i want in in this formate \nexample formate : {\n  \"authority\": \"California\",\n  \"complaint\": \"message\"\n}\n\n \nalso this is an fire authority so you also have to add \"authority\":\"fire\" along with output in json\n\nand do not add any extra things \n\ninput to formate : {{ $json.output }}",
+                "hasOutputParser": true,
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "typeVersion": 2.2,
+            "position": [
+                -400,
+                1488
+            ],
+            "id": "034a7c17-4954-4bfb-aaee-21af2a90c05a",
+            "name": "fire agent"
+        },
+        {
+            "parameters": {
+                "jsonSchemaExample": "{\n  \"complaintId\":\"\",\n  \"authorityType\": \"\",\n  \"message\": \"\"\n}\n"
+            },
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "typeVersion": 1.3,
+            "position": [
+                -1168,
+                1344
+            ],
+            "id": "f07430d2-6859-489d-ba6e-e4b2ac5e4000",
+            "name": "Structured Output Parser"
+        },
+        {
+            "parameters": {
+                "jsonSchemaExample": "{\n  \"complaintId\":\"\",\n  \"authorityType\": \"\",\n  \"message\": \"\"\n}\n"
+            },
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "typeVersion": 1.3,
+            "position": [
+                -1168,
+                1712
+            ],
+            "id": "5c164d7d-b216-4596-b51e-e46560945e00",
+            "name": "Structured Output Parser2"
+        },
+        {
+            "parameters": {
+                "jsonSchemaExample": "{\n  \"complaintId\":\"\",\n  \"authorityType\": \"\",\n  \"message\": \"\"\n}\n"
+            },
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "typeVersion": 1.3,
+            "position": [
+                -256,
+                960
+            ],
+            "id": "01127507-2ce0-45ae-adff-0587ca81c6d8",
+            "name": "Structured Output Parser3"
+        },
+        {
+            "parameters": {
+                "jsonSchemaExample": "{\n  \"complaintId\":\"\",\n  \"authorityType\": \"\",\n  \"message\": \"\"\n}\n"
+            },
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "typeVersion": 1.3,
+            "position": [
+                -256,
+                1344
+            ],
+            "id": "c3c40d39-0944-4b4b-9bf8-f72d782322bf",
+            "name": "Structured Output Parser4"
+        },
+        {
+            "parameters": {
+                "jsonSchemaExample": "{\n  \"complaintId\":\"\",\n  \"authorityType\": \"\",\n  \"message\": \"\"\n}\n"
+            },
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "typeVersion": 1.3,
+            "position": [
+                -256,
+                1712
+            ],
+            "id": "42431337-025b-487f-b0f7-33610147fb9a",
+            "name": "Structured Output Parser5"
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.4,
+            "position": [
+                704,
+                -16
+            ],
+            "id": "854d97ae-58cb-4d28-b6c4-2ef6733ea4fa",
+            "name": "Respond to Webhook6"
+        },
+        {
+            "parameters": {
+                "jsonSchemaExample": "{\n  \"complaintId\":\"\",\n  \"authorityType\": \"\",\n  \"message\": \"\"\n}\n"
+            },
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "typeVersion": 1.3,
+            "position": [
+                352,
+                176
+            ],
+            "id": "8c2a599d-7176-423a-9917-c1e81558aaa0",
+            "name": "Structured Output Parser6"
+        },
+        {
+            "parameters": {
+                "model": {
+                    "__rl": true,
+                    "value": "gpt-4o-mini",
+                    "mode": "list",
+                    "cachedResultName": "gpt-4o-mini"
+                },
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "typeVersion": 1.2,
+            "position": [
+                224,
+                176
+            ],
+            "id": "86f24aff-8050-434c-a503-65d1f21a4bcb",
+            "name": "OpenAI Chat Model8"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "=i want in in this formate \nexample formate: {\n  \"complaintId\":\"\",\n  \"authorityType\": \"\",\n  \"message\": \"\"\n}\n \nalso this is an  cyber so you also have to add \"authority\":\"cyber\" along with output in json and do not add any extra things\n\ninput to formate :   {{ $json.output }}",
+                "hasOutputParser": true,
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "typeVersion": 2.2,
+            "position": [
+                208,
+                -16
+            ],
+            "id": "4631211e-77a2-48c2-8ce1-716a6c997f94",
+            "name": "cyber"
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.4,
+            "position": [
+                432,
+                304
+            ],
+            "id": "cdb2301b-bd0f-4ee2-9289-9533fa0a186e",
+            "name": "Respond to Webhook7"
+        },
+        {
+            "parameters": {
+                "jsonSchemaExample": "{\n  \"complaintId\":\"\",\n  \"authorityType\": \"\",\n  \"message\": \"\"\n}\n"
+            },
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "typeVersion": 1.3,
+            "position": [
+                176,
+                496
+            ],
+            "id": "8ca06a01-b874-464c-ab46-1baac4c683ce",
+            "name": "Structured Output Parser7"
+        },
+        {
+            "parameters": {
+                "model": {
+                    "__rl": true,
+                    "value": "gpt-4o-mini",
+                    "mode": "list",
+                    "cachedResultName": "gpt-4o-mini"
+                },
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "typeVersion": 1.2,
+            "position": [
+                16,
+                496
+            ],
+            "id": "ad82871f-7e40-4e9f-9c9b-432625d6f29c",
+            "name": "OpenAI Chat Model9"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "=i want in in this formate \nexample formate: {\n  \"complaintId\":\"\",\n  \"authorityType\": \"\",\n  \"message\": \"\"\n}\n \nalso this is an  waste so you also have to add \"authority\":\"waste\" along with output in json and do not add any extra things\n\ninput to formate :   {{ $('AI Agent').item.json.output }}",
+                "hasOutputParser": true,
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "typeVersion": 2.2,
+            "position": [
+                16,
+                304
+            ],
+            "id": "0e173609-dbc5-4404-bca1-cd8af4fdae66",
+            "name": "waste"
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.4,
+            "position": [
+                784,
+                640
+            ],
+            "id": "d8a952f5-9d7b-4434-9e85-2c34244d9c4a",
+            "name": "Respond to Webhook8"
+        },
+        {
+            "parameters": {
+                "jsonSchemaExample": "{\n  \"complaintId\":\"\",\n  \"authorityType\": \"\",\n  \"message\": \"\"\n}\n"
+            },
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "typeVersion": 1.3,
+            "position": [
+                528,
+                832
+            ],
+            "id": "9664df45-4d74-4f48-8bf1-1b69e995eeb9",
+            "name": "Structured Output Parser8"
+        },
+        {
+            "parameters": {
+                "model": {
+                    "__rl": true,
+                    "value": "gpt-4o-mini",
+                    "mode": "list",
+                    "cachedResultName": "gpt-4o-mini"
+                },
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "typeVersion": 1.2,
+            "position": [
+                368,
+                832
+            ],
+            "id": "f511f50e-8e1f-465c-bd21-fb04139464e8",
+            "name": "OpenAI Chat Model10"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "=i want in in this formate \nexample formate: {\n  \"complaintId\":\"\",\n  \"authorityType\": \"\",\n  \"message\": \"\"\n}\n \nalso this is an  hospital so you also have to add \"authority\":\"hospital\" along with output in json and do not add any extra things\n\ninput to formate :   {{ $('AI Agent').item.json.output }}",
+                "hasOutputParser": true,
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "typeVersion": 2.2,
+            "position": [
+                368,
+                640
+            ],
+            "id": "baca56f0-a3a2-47b3-82c0-84cd6ca48901",
+            "name": "hospital"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "=i want in in this formate \nexample formate : {\n  \"complaintId\":\"\",\n  \"authorityType\": \"\",\n  \"message\": \"\"\n}\n\n \nalso this is an transportation authority so you also have to add \"authority\":\"transportation\" along with output in json and do not add any extra things\n\ninput to formate :  {{ $('AI Agent').item.json.output }}",
+                "hasOutputParser": true,
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "typeVersion": 2.2,
+            "position": [
+                -400,
+                752
+            ],
+            "id": "06d2e19c-9895-460b-9ae9-998e09ad5d44",
+            "name": "transportation"
+        }
+    ],
+    "connections": {
+        "Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "AI Agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "AI Agent": {
+            "main": [
+                [
+                    {
+                        "node": "Text Classifier",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "OpenAI Chat Model": {
+            "ai_languageModel": [
+                [
+                    {
+                        "node": "AI Agent",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Text Classifier": {
+            "main": [
+                [
+                    {
+                        "node": "electricity agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "road agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "water agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "transportation",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "police agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "fire agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "cyber",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "waste",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "hospital",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "OpenAI Chat Model1": {
+            "ai_languageModel": [
+                [
+                    {
+                        "node": "Text Classifier",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "OpenAI Chat Model2": {
+            "ai_languageModel": [
+                [
+                    {
+                        "node": "electricity agent",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Structured Output Parser1": {
+            "ai_outputParser": [
+                [
+                    {
+                        "node": "electricity agent",
+                        "type": "ai_outputParser",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "OpenAI Chat Model3": {
+            "ai_languageModel": [
+                [
+                    {
+                        "node": "road agent",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "OpenAI Chat Model4": {
+            "ai_languageModel": [
+                [
+                    {
+                        "node": "water agent",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "OpenAI Chat Model5": {
+            "ai_languageModel": [
+                [
+                    {
+                        "node": "transportation",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "OpenAI Chat Model6": {
+            "ai_languageModel": [
+                [
+                    {
+                        "node": "police agent",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "OpenAI Chat Model7": {
+            "ai_languageModel": [
+                [
+                    {
+                        "node": "fire agent",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "electricity agent": {
+            "main": [
+                [
+                    {
+                        "node": "Respond to Webhook",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "road agent": {
+            "main": [
+                [
+                    {
+                        "node": "Respond to Webhook1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "water agent": {
+            "main": [
+                [
+                    {
+                        "node": "Respond to Webhook2",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "police agent": {
+            "main": [
+                [
+                    {
+                        "node": "Respond to Webhook4",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "fire agent": {
+            "main": [
+                [
+                    {
+                        "node": "Respond to Webhook5",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Structured Output Parser": {
+            "ai_outputParser": [
+                [
+                    {
+                        "node": "road agent",
+                        "type": "ai_outputParser",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Structured Output Parser2": {
+            "ai_outputParser": [
+                [
+                    {
+                        "node": "water agent",
+                        "type": "ai_outputParser",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Structured Output Parser3": {
+            "ai_outputParser": [
+                [
+                    {
+                        "node": "transportation",
+                        "type": "ai_outputParser",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Structured Output Parser4": {
+            "ai_outputParser": [
+                [
+                    {
+                        "node": "police agent",
+                        "type": "ai_outputParser",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Structured Output Parser5": {
+            "ai_outputParser": [
+                [
+                    {
+                        "node": "fire agent",
+                        "type": "ai_outputParser",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Structured Output Parser6": {
+            "ai_outputParser": [
+                [
+                    {
+                        "node": "cyber",
+                        "type": "ai_outputParser",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "OpenAI Chat Model8": {
+            "ai_languageModel": [
+                [
+                    {
+                        "node": "cyber",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "cyber": {
+            "main": [
+                [
+                    {
+                        "node": "Respond to Webhook6",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Structured Output Parser7": {
+            "ai_outputParser": [
+                [
+                    {
+                        "node": "waste",
+                        "type": "ai_outputParser",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "OpenAI Chat Model9": {
+            "ai_languageModel": [
+                [
+                    {
+                        "node": "waste",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "waste": {
+            "main": [
+                [
+                    {
+                        "node": "Respond to Webhook7",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Structured Output Parser8": {
+            "ai_outputParser": [
+                [
+                    {
+                        "node": "hospital",
+                        "type": "ai_outputParser",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "OpenAI Chat Model10": {
+            "ai_languageModel": [
+                [
+                    {
+                        "node": "hospital",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "hospital": {
+            "main": [
+                [
+                    {
+                        "node": "Respond to Webhook8",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "transportation": {
+            "main": [
+                [
+                    {
+                        "node": "Respond to Webhook3",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "pinData": {},
+    "meta": {
+        "instanceId": "7bcf1a6366e883247615d309e03899a2a7df98c1a01965893ddd408e19c2a7d6"
+    }
+}
